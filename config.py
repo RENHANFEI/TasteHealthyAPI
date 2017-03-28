@@ -24,6 +24,17 @@ class ProductionConfig(Config):
 	SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
 		'postgresql://thuser:tastehealthy@localhost/tastehealthydb'
 
+class HerokuConfig(ProductionConfig):
+	@classmethod
+	def init_app(cls, app):
+		ProductionConfig.init_app(app)
+		import logging
+		from logging import StreamHandler
+		file_handler = StreamHandler()
+		file_handler.setLevel(logging.WARNING) 
+		pp.logger.addHandler(file_handler)
+
+
 config = {
 	'development': DevelopmentConfig,
 	'testing': TestingConfig,
